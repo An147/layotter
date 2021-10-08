@@ -144,6 +144,14 @@ abstract class Layotter_Element extends Layotter_Editable {
         }
     }
 
+    private function is_term_being_edited($term_id) {
+        global $taxnow;
+
+        $term    = get_term( $term_id, $taxnow );
+
+        return $term instanceof WP_Term;
+    }
+
 
     /**
      * Check if this element type is enabled for a specific post
@@ -153,6 +161,12 @@ abstract class Layotter_Element extends Layotter_Editable {
      */
     final public function is_enabled_for($post_id) {
         $post_id = intval($post_id);
+
+        if($this->is_term_being_edited($post_id)){
+            return true;//TODO
+        }
+
+
         $post_type = get_post_type($post_id);
 
         $field_group = Layotter_ACF::get_field_group($this->field_group);

@@ -8,7 +8,8 @@ class Layotter_Post {
 
     private
         $options,
-        $rows = array();
+        $rows = array(),
+        $is_term = false;
 
 
     /**
@@ -17,6 +18,11 @@ class Layotter_Post {
      * @param int|string $id_or_json Post ID or JSON object holding post structure
      */
     public function __construct($id_or_json) {
+
+        if (is_int($id_or_json)) {
+            $this->is_term = $this->is_term_being_edited($post_id);
+        }
+
         $structure = $this->get_structure($id_or_json);
         $structure = $this->validate_structure($structure);
 
@@ -128,7 +134,43 @@ class Layotter_Post {
         return is_array($maybe_array);
     }
 
+    //get term meta field
+      public function get_tax_meta($term_id,$key,$multi = false){
+        $t_id = (is_object($term_id))? $term_id->term_id: $term_id;
+        $m = get_option( 'tax_meta_'.$t_id);  
+        if (isset($m[$key])){
+          return $m[$key];
+        }else{
+          return '';
+        }
+      }
+      
+      //delete meta
+      // public function delete_tax_meta($term_id,$key){
+      //   $m = get_option( 'tax_meta_'.$term_id);
+      //   if (isset($m[$key])){
+      //     unset($m[$key]);
+      //   }
+      //   update_option('tax_meta_'.$term_id,$m);
+      // }
+      
+      //update meta
+      // public function update_tax_meta($term_id,$key,$value){
+      //   $m = get_option( 'tax_meta_'.$term_id);
+      //   $m[$key] = $value;
+      //   update_option('tax_meta_'.$term_id,$m);
+      // }
 
+
+
+    private function fetch_layotter_data($post_id){
+        if($this->is_term){
+            return $this->get_tax_meta($post_id, 'layotter_json');
+        }
+        else{
+            return get_post_meta($post_id, 'layotter_json', true);
+        }
+    }
     /**
      * Check if post 1.5.0 data structure is present for this post
      *
@@ -138,13 +180,26 @@ class Layotter_Post {
      * @return bool
      */
     private function has_new_data_structure($post_id) {
-        $json = get_post_meta($post_id, 'layotter_json', true);
+        $json = $this->fetch_layotter_data($post_id);
 
         if (!empty($json)) {
             return true;
         }
 
         return false;
+    }
+
+    private function is_term_being_edited($term_id) {
+        global $taxnow;
+
+        // if ( ! $taxnow || empty( $_GET['tag_ID'] ) ) {
+        //     return false;
+        // }
+
+        // $term_id = absint( $_GET['tag_ID'] );
+        $term    = get_term( $term_id, $taxnow );
+
+        return $term instanceof WP_Term;
     }
 
 
@@ -155,9 +210,11 @@ class Layotter_Post {
      * @return string|null JSON string containing post structure or null for new posts
      */
     private function get_json_by_post_id($post_id) {
+            
+        
         if ($this->has_new_data_structure($post_id) !== false) {
             // if post 1.5.0 data structure is present, get JSON from custom field
-            return get_post_meta($post_id, 'layotter_json', true);
+            return  $this->fetch_layotter_data($post_id);
         } else {
             // otherwise, try to extract data from the post content
             return $this->get_json_from_legacy_post_content($post_id);

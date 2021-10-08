@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: Layotter
+Plugin Name: Layotter Extended
 Description: Add and arrange your content freely with an intuitive drag and drop interface!
-Author: Dennis Hingst
+Author: Dennis Hingst, Andrei Sirant
 Version: 1.5.27
 Author URI: http://www.layotter.com/
 Text Domain: layotter
-GitHub Plugin URI: hingst/layotter
+GitHub Plugin URI: An147/layotter, hingst/layotter
 */
 
 

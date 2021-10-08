@@ -153,12 +153,12 @@ class Layotter {
 
         // fail if not on a relevant edit screen
         global $pagenow;
-        if ($pagenow != 'post.php' AND $pagenow != 'post-new.php') {
+        if ($pagenow != 'post.php' AND $pagenow != 'post-new.php' AND $pagenow != 'term.php') {
             return false;
         }
 
         // fail if layotter isn't enabled for the current post
-        if (!self::is_enabled_for_post(get_the_ID())) {
+        if ($pagenow != 'term.php' && !self::is_enabled_for_post(get_the_ID())) {
             return false;
         }
 

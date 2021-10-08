@@ -74,6 +74,12 @@ function layotter_assets_admin_enqueue_scripts() {
     
     // fetch content structure for the current post
     $post_id = get_the_ID();
+
+    global $pagenow;
+    if($pagenow === 'term.php'){
+        $post_id = absint( $_GET['tag_ID'] );
+    }
+    
     $content_structure = new Layotter_Post($post_id);
 
 

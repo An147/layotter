@@ -4,8 +4,10 @@
  * Include views HTML
  */
 add_action('admin_footer-post.php', 'layotter_views_admin_footer');
+add_action('admin_footer-term.php', 'layotter_views_admin_footer');
 add_action('admin_footer-post-new.php', 'layotter_views_admin_footer');
 function layotter_views_admin_footer() {
+    echo Layotter::is_enabled() ? 'ok' : 'no';
     if (!Layotter::is_enabled()) {
         return;
     }
