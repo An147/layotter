@@ -11,27 +11,24 @@
  * custom field.
  */
 
-add_filter( 'wp_update_term_data', 'filter_function_name_4877', 10, 4 );
-function filter_function_name_4877( $data, $term_id, $taxonomy, $args ){
+add_action ( 'edited_terms', 'layotter_update_term_function', 10, 2);
+function layotter_update_term_function( $term_id, $taxonomy )
+{
 
-    if (!isset($data['layotter_json'])) {
-        error_log('message');
+    if (!isset($_POST['layotter_json'])) {
+        error_log('layotter-master/revisions.php/layotter_update_term_function/layotter_json is not set!');
         return $data;
     }
 
-    $json = $data['layotter_json'];
+    $json = $_POST['layotter_json'];
     $unslashed_json = stripslashes_deep($json);
 
-    // turn JSON into post content HTML
+    // // turn JSON into post content HTML
     $layotter_post = new Layotter_Post($unslashed_json);
     $content = $layotter_post->get_frontend_view();
-    update_tax_meta($term_id, 'layotter_json', $json);
+    $layotter_post->update_tax_meta($term_id, 'layotter_json', $json);
 
-    error_log('updated');
-
-    return $data;
 }
-
 
 add_filter('wp_insert_post_data', 'layotter_make_search_dump', 999, 2);
 function layotter_make_search_dump($data, $raw_post){

@@ -19,12 +19,21 @@ class Layotter_Post {
      */
     public function __construct($id_or_json) {
 
-        if (is_int($id_or_json)) {
-            $this->is_term = $this->is_term_being_edited($post_id);
+        // var_error_log($id_or_json);
+
+        if (is_numeric($id_or_json)) {
+            $this->is_term = $this->is_term_being_edited($id_or_json);
         }
 
+        // error_log(var_export($this->is_term, true));
+
         $structure = $this->get_structure($id_or_json);
+
+        // var_error_log($structure);
+
         $structure = $this->validate_structure($structure);
+
+        // var_error_log($structure);
 
         $this->options = new Layotter_Options('post', $structure['options']);
 
@@ -41,11 +50,13 @@ class Layotter_Post {
      * @return string JSON string containing post structure or null for new posts
      */
     private function get_structure($id_or_json) {
-        if (is_int($id_or_json)) {
+        if (is_numeric($id_or_json)) {
             $json = $this->get_json_by_post_id($id_or_json);
         } else {
             $json = $id_or_json;
         }
+
+        // var_error_log($this->is_json($json));
 
         if ($this->is_json($json)) {
             return json_decode($json, true);
@@ -64,6 +75,11 @@ class Layotter_Post {
      * @return array Validated post structure
      */
     private function validate_structure($structure) {
+
+        // error_log('validate_structure');
+
+        // var_error_log(!is_array($structure));
+
         if (!is_array($structure)) {
             $structure = array();
         }
@@ -130,7 +146,9 @@ class Layotter_Post {
      * @return bool Whether the parameter contained a JSON array
      */
     private function is_json($maybe_json) {
+        // var_error_log($maybe_json);
         $maybe_array = json_decode($maybe_json, true);
+        // var_error_log($maybe_array);
         return is_array($maybe_array);
     }
 
@@ -138,8 +156,10 @@ class Layotter_Post {
       public function get_tax_meta($term_id,$key,$multi = false){
         $t_id = (is_object($term_id))? $term_id->term_id: $term_id;
         $m = get_option( 'tax_meta_'.$t_id);  
+        // error_log('loading json of term_'.$term_id);
+        // var_error_log($m[$key]);
         if (isset($m[$key])){
-          return $m[$key];
+          return stripslashes($m[$key]);
         }else{
           return '';
         }
@@ -164,6 +184,10 @@ class Layotter_Post {
 
 
     private function fetch_layotter_data($post_id){
+
+        // error_log('fetch_layotter_data');
+
+        // var_error_log($this->is_term);
         if($this->is_term){
             return $this->get_tax_meta($post_id, 'layotter_json');
         }
@@ -211,6 +235,7 @@ class Layotter_Post {
      */
     private function get_json_by_post_id($post_id) {
             
+        error_log('get_json_by_post_id');
         
         if ($this->has_new_data_structure($post_id) !== false) {
             // if post 1.5.0 data structure is present, get JSON from custom field
