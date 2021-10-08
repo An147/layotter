@@ -10,6 +10,29 @@
  * This filter is used to build a search dump when saving a post, as well as saving the post's JSON strucutre to a
  * custom field.
  */
+
+add_filter( 'wp_update_term_data', 'filter_function_name_4877', 10, 4 );
+function filter_function_name_4877( $data, $term_id, $taxonomy, $args ){
+
+    if (!isset($data['layotter_json'])) {
+        error_log('message');
+        return $data;
+    }
+
+    $json = $data['layotter_json'];
+    $unslashed_json = stripslashes_deep($json);
+
+    // turn JSON into post content HTML
+    $layotter_post = new Layotter_Post($unslashed_json);
+    $content = $layotter_post->get_frontend_view();
+    update_tax_meta($term_id, 'layotter_json', $json);
+
+    error_log('updated');
+
+    return $data;
+}
+
+
 add_filter('wp_insert_post_data', 'layotter_make_search_dump', 999, 2);
 function layotter_make_search_dump($data, $raw_post){
     $post_id = $raw_post['ID'];

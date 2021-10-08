@@ -165,6 +165,19 @@ class Layotter {
         return true;
     }
 
+    public static function is_term_being_edited() {
+        global $taxnow;
+
+        if ( ! $taxnow || empty( $_GET['tag_ID'] ) ) {
+            return false;
+        }
+
+        $term_id = absint( $_GET['tag_ID'] );
+        $term = get_term( $term_id, $taxnow );
+
+        return $term instanceof WP_Term;
+    }
+
 
     /**
      * Check if Layotter is enabled for a specific post

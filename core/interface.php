@@ -10,20 +10,22 @@ function layotter_admin_head() {
         return;
     }
 
-    $post_type = get_post_type();
+    if(!Layotter::is_term_being_edited()){
+        $post_type = get_post_type();
 
-    // remove TinyMCE
-    remove_post_type_support($post_type, 'editor');
+        // remove TinyMCE
+        remove_post_type_support($post_type, 'editor');
 
-    // insert layotter
-    add_meta_box(
-        'layotter_wrapper', // ID
-        'Layotter', // title
-        'layotter_output_interface', // callback
-        $post_type, // post type for which to enable
-        'normal', // position
-        'high' // priority
-    );
+        // insert layotter
+        add_meta_box(
+            'layotter_wrapper', // ID
+            'Layotter', // title
+            'layotter_output_interface', // callback
+            $post_type, // post type for which to enable
+            'normal', // position
+            'high' // priority
+        ); 
+    }
 }
 
 

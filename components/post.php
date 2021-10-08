@@ -154,12 +154,12 @@ class Layotter_Post {
       //   update_option('tax_meta_'.$term_id,$m);
       // }
       
-      //update meta
-      // public function update_tax_meta($term_id,$key,$value){
-      //   $m = get_option( 'tax_meta_'.$term_id);
-      //   $m[$key] = $value;
-      //   update_option('tax_meta_'.$term_id,$m);
-      // }
+      // update meta
+      public function update_tax_meta($term_id,$key,$value){
+        $m = get_option( 'tax_meta_'.$term_id);
+        $m[$key] = $value;
+        update_option('tax_meta_'.$term_id,$m);
+      }
 
 
 
