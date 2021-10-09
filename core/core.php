@@ -178,6 +178,19 @@ class Layotter {
         return $term instanceof WP_Term;
     }
 
+    public static function is_term($post_id) {
+        global $taxnow;
+
+        if ( ! $taxnow || empty( $post_id ) ) {
+            return false;
+        }
+
+        $term_id = absint( $post_id );
+        $term = get_term( $term_id, $taxnow );
+
+        return $term instanceof WP_Term;
+    }
+
 
     /**
      * Check if Layotter is enabled for a specific post
@@ -186,6 +199,10 @@ class Layotter {
      * @return bool Whether Layotter is enabled
      */
     public static function is_enabled_for_post($post_id) {
+
+        if(Layotter::is_term($post_id))
+            return true;
+
         $override_enabled = apply_filters('layotter/enable_for_posts', array());
         $override_disabled = apply_filters('layotter/disable_for_posts', array());
 
