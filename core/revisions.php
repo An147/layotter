@@ -42,7 +42,7 @@ function layotter_compile_post_html($layotter_json){
     return $content;
 }
 
-function layotter_normalize_and_get_shortcoded_html($content, $post_id){
+function layotter_normalize_post_html($content){
     // insert spaces to prevent <p>foo</p><p>bar</p> becoming "foobar" instead of "foo bar"
     // then strip all tags except <img>
     // then remove excess whitespace
@@ -54,6 +54,10 @@ function layotter_normalize_and_get_shortcoded_html($content, $post_id){
         $normalized_content = mb_ereg_replace('/\s+/', ' ', $normalized_content);
     }
 
+    return $normalized_content;
+}
+
+function layotter_get_shortcoded_html($content, $post_id){
     // wrap search dump with a [layotter] shortcode and return modified post data to be saved to the database
     // add the post ID because otherwise the shortcode handler would have no reliable way to get the post ID through
     // which the JSON data will be fetched
@@ -80,7 +84,9 @@ function layotter_make_search_dump($data, $raw_post){
     // save JSON to a custom field (oddly enough, Wordpress breaks JSON if it's stripslashed)
     update_post_meta($post_id, 'layotter_json', $json);
 
-    $shortcoded_content = layotter_normalize_and_get_shortcoded_html($content, $post_id);
+    $content = layotter_normalize_post_html($content);
+
+    $shortcoded_content = layotter_get_shortcoded_html($content, $post_id);
     
     $data['post_content'] = $shortcoded_content;
     return $data;
