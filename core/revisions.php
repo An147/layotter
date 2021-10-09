@@ -30,26 +30,19 @@ function layotter_update_term_function( $term_id, $taxonomy )
 
 }
 
-add_filter('wp_insert_post_data', 'layotter_make_search_dump', 999, 2);
-function layotter_make_search_dump($data, $raw_post){
-    $post_id = $raw_post['ID'];
 
-    // don't change anything if not editing a Layotter-enabled post
-    if (!Layotter::is_enabled_for_post($post_id) OR !isset($raw_post['layotter_json'])) {
-        return $data;
-    }
-
+function layotter_compile_post_html($layotter_json){
     // copy JSON from POST and strip slashes that were added by Wordpress
-    $json = $raw_post['layotter_json'];
-    $unslashed_json = stripslashes_deep($json);
+    $unslashed_json = stripslashes_deep($layotter_json);
 
     // turn JSON into post content HTML
     $layotter_post = new Layotter_Post($unslashed_json);
     $content = $layotter_post->get_frontend_view();
 
-    // save JSON to a custom field (oddly enough, Wordpress breaks JSON if it's stripslashed)
-    update_post_meta($post_id, 'layotter_json', $json);
+    return $content;
+}
 
+function layotter_normalize_and_get_shortcoded_html($content, $post_id){
     // insert spaces to prevent <p>foo</p><p>bar</p> becoming "foobar" instead of "foo bar"
     // then strip all tags except <img>
     // then remove excess whitespace
@@ -65,6 +58,30 @@ function layotter_make_search_dump($data, $raw_post){
     // add the post ID because otherwise the shortcode handler would have no reliable way to get the post ID through
     // which the JSON data will be fetched
     $shortcoded_content = '[layotter post="' . $post_id . '"]' . $normalized_content . '[/layotter]';
+
+    return $shortcoded_content;
+}
+
+
+add_filter('wp_insert_post_data', 'layotter_make_search_dump', 999, 2);
+function layotter_make_search_dump($data, $raw_post){
+    $post_id = $raw_post['ID'];
+
+    // don't change anything if not editing a Layotter-enabled post
+    if (!Layotter::is_enabled_for_post($post_id) OR !isset($raw_post['layotter_json'])) {
+        return $data;
+    }
+
+    // copy JSON from POST and strip slashes that were added by Wordpress
+    $json = $raw_post['layotter_json'];
+
+    $content = layotter_compile_post_html($json);
+
+    // save JSON to a custom field (oddly enough, Wordpress breaks JSON if it's stripslashed)
+    update_post_meta($post_id, 'layotter_json', $json);
+
+    $shortcoded_content = layotter_normalize_and_get_shortcoded_html($content, $post_id);
+    
     $data['post_content'] = $shortcoded_content;
     return $data;
 }
