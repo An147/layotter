@@ -178,8 +178,12 @@ class Layotter {
         return $term instanceof WP_Term;
     }
 
-    public static function is_term_being_viewed() {
-        return (is_tax() || is_category() || is_tag());
+    public static function is_term_being_viewed($post_id) {
+        global $taxnow;
+        if (!$taxnow)
+            return false;
+        $term = get_term($post_id, $taxnow);
+        return (is_tax() || is_category() || is_tag()) && $term instanceof WP_Term;
     }
 
 
@@ -191,7 +195,7 @@ class Layotter {
      */
     public static function is_enabled_for_post($post_id) {
 
-        if(Layotter::is_term_being_viewed())
+        if(Layotter::is_term_being_viewed($post_id))
             return true;
 
         $override_enabled = apply_filters('layotter/enable_for_posts', array());

@@ -25,7 +25,7 @@ class Layotter_Post {
             $this->is_term = $this->is_term_being_edited_or_viewed($id_or_json);
         }
 
-        // error_log(var_export($this->is_term, true));
+        // error_log('is term?:'.var_export($this->is_term, true));
 
         $structure = $this->get_structure($id_or_json);
 
@@ -215,30 +215,16 @@ class Layotter_Post {
 
     private function is_term_being_edited_or_viewed($term_id) {
 
-        error_log('is_term_being_edited_or_viewed?');
+        // error_log('is_term_being_edited_or_viewed?');
 
         $isTermBeingEdited = Layotter::is_term_being_edited();
-        $isTermBeingViewed = Layotter::is_term_being_viewed();
+        $isTermBeingViewed = Layotter::is_term_being_viewed($term_id);
 
-        var_error_log($isTermBeingEdited);
-        var_error_log($isTermBeingViewed);
+
+        // var_error_log($isTermBeingEdited);
+        // var_error_log($isTermBeingViewed);
 
         return $isTermBeingEdited || $isTermBeingViewed;
-        // global $taxnow;
-
-        // //get term by slug?
-
-
-        // // if ( ! $taxnow || empty( $_GET['tag_ID'] ) ) {
-        // //     return false;
-        // // }
-
-        // // $term_id = absint( $_GET['tag_ID'] );
-        // $term    = get_term( $term_id, $taxnow );
-
-        // var_error_log($term);
-
-        // return $term instanceof WP_Term;
     }
 
 
@@ -250,7 +236,7 @@ class Layotter_Post {
      */
     private function get_json_by_post_id($post_id) {
             
-        error_log('get_json_by_post_id');
+        // error_log('get_json_by_post_id');
         
         if ($this->has_new_data_structure($post_id) !== false) {
             // if post 1.5.0 data structure is present, get JSON from custom field

@@ -21,15 +21,23 @@ function layotter_frontend_shortcode($atts, $input = '') {
     // $post variable hasn't been correctly initialized, like do_shortcode() or apply_filters('the_content')
     
     // var_error_log(Layotter::is_enabled_for_post($atts['post']));
+
+    // error_log('layotter_frontend_shortcode');
+
     
     if (isset($atts['post']) AND Layotter::is_enabled_for_post($atts['post'])) {
         $post_id = intval($atts['post']);
+        // error_log('Layotter_Post('.$post_id.')');
+
         $layotter = new Layotter_Post($post_id);
     } else {
+        // error_log('layotter_frontend_shortcode with empty!');
         $layotter = new Layotter_Post($input);
     }
 
+
     $html = $layotter->get_frontend_view();
+    // var_error_log($html);
 
     // apply wptexturize manually after post HTML has been parsed because automatic wptexturizing is disabled for
     // Layotter content (see layotter_disable_wptexturize() below)
