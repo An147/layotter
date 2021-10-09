@@ -57,7 +57,7 @@ function layotter_normalize_post_html($content){
     return $normalized_content;
 }
 
-function layotter_get_shortcoded_html($content, $post_id){
+function layotter_get_shortcoded_html($normalized_content, $post_id){
     // wrap search dump with a [layotter] shortcode and return modified post data to be saved to the database
     // add the post ID because otherwise the shortcode handler would have no reliable way to get the post ID through
     // which the JSON data will be fetched
@@ -69,6 +69,9 @@ function layotter_get_shortcoded_html($content, $post_id){
 
 add_filter('wp_insert_post_data', 'layotter_make_search_dump', 999, 2);
 function layotter_make_search_dump($data, $raw_post){
+
+    var_error_log($raw_post);
+
     $post_id = $raw_post['ID'];
 
     // don't change anything if not editing a Layotter-enabled post

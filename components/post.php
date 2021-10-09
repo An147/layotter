@@ -22,7 +22,7 @@ class Layotter_Post {
         // var_error_log($id_or_json);
 
         if (is_numeric($id_or_json)) {
-            $this->is_term = $this->is_term_being_edited($id_or_json);
+            $this->is_term = $this->is_term_being_edited_or_viewed($id_or_json);
         }
 
         // error_log(var_export($this->is_term, true));
@@ -213,17 +213,32 @@ class Layotter_Post {
         return false;
     }
 
-    private function is_term_being_edited($term_id) {
-        global $taxnow;
+    private function is_term_being_edited_or_viewed($term_id) {
 
-        // if ( ! $taxnow || empty( $_GET['tag_ID'] ) ) {
-        //     return false;
-        // }
+        error_log('is_term_being_edited_or_viewed?');
 
-        // $term_id = absint( $_GET['tag_ID'] );
-        $term    = get_term( $term_id, $taxnow );
+        $isTermBeingEdited = Layotter::is_term_being_edited();
+        $isTermBeingViewed = Layotter::is_term_being_viewed();
 
-        return $term instanceof WP_Term;
+        var_error_log($isTermBeingEdited);
+        var_error_log($isTermBeingViewed);
+
+        return $isTermBeingEdited || $isTermBeingViewed;
+        // global $taxnow;
+
+        // //get term by slug?
+
+
+        // // if ( ! $taxnow || empty( $_GET['tag_ID'] ) ) {
+        // //     return false;
+        // // }
+
+        // // $term_id = absint( $_GET['tag_ID'] );
+        // $term    = get_term( $term_id, $taxnow );
+
+        // var_error_log($term);
+
+        // return $term instanceof WP_Term;
     }
 
 

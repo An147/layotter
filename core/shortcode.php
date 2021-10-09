@@ -19,6 +19,9 @@ function layotter_frontend_shortcode($atts, $input = '') {
     // before 1.5.0, JSON was stored directly in the post content
     // get_the_ID() wouldn't be reliable here because this shortcode handler might be triggered in a context where the
     // $post variable hasn't been correctly initialized, like do_shortcode() or apply_filters('the_content')
+    
+    // var_error_log(Layotter::is_enabled_for_post($atts['post']));
+    
     if (isset($atts['post']) AND Layotter::is_enabled_for_post($atts['post'])) {
         $post_id = intval($atts['post']);
         $layotter = new Layotter_Post($post_id);
