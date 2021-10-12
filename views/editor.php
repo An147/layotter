@@ -32,6 +32,10 @@
     <div class="layotter-rows" ui-sortable="rowSortableOptions" ng-model="data.rows">
         <div class="layotter-row layotter-animate" ng-repeat="row in data.rows" ng-class="{ 'layotter-loading' : row.isLoading }">
             <div class="layotter-row-canvas">
+                <div class="layotter-row-options">
+                    <div class="layout-type">{{row.options.content_width}}</div>
+                    <div class="css-selector">{{row.options.html_id_string}}</div>
+                </div>
                 <div class="layotter-row-move">
                     <i class="fa fa-arrows-v"></i><?php _e('Move row', 'layotter'); ?>
                 </div>

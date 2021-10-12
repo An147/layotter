@@ -1,9 +1,31 @@
 /**
  * Controller for the main editor
  */
+
+function create_row_css_selector(row){
+    var rowOptions = row.options;
+
+    var htmlIDString = '';
+    if(rowOptions.row_id)
+        htmlIDString = '#'+rowOptions.row_id;
+    if(rowOptions.extra_classes)
+        htmlIDString += '.'+rowOptions.extra_classes;
+
+    row.options.html_id_string = htmlIDString;
+}
+
 app.controller('EditorCtrl', function($scope, $animate, data, content, templates, layouts, history) {
     angular.extend($scope, content, templates, layouts, history);
     $scope.data = data.contentStructure;
+
+
+    console.log($scope.data);
+
+    
+    for (let index = 0; index < $scope.data.rows.length; ++index) {
+        var row = $scope.data.rows[index];
+        create_row_css_selector(row);
+    }
 
 
     $scope.$watch(function() {
@@ -32,6 +54,7 @@ app.controller('EditorCtrl', function($scope, $animate, data, content, templates
         // remove views from JSON data, no need to store them as they're always regenerated before output
         var valueClone = angular.copy(value);
         angular.forEach(valueClone.rows, function(row){
+            // create_row_css_selector(row);
             angular.forEach(row.cols, function(col){
                 angular.forEach(col.elements, function(element){
                     delete element.view;

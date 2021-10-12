@@ -215,10 +215,10 @@ class Layotter_Post {
 
     private function is_term_being_edited_or_viewed($term_id) {
 
-        // error_log('is_term_being_edited_or_viewed?');
-
         $isTermBeingEdited = Layotter::is_term_being_edited();
         $isTermBeingViewed = Layotter::is_term_being_viewed($term_id);
+
+
 
 
         // var_error_log($isTermBeingEdited);

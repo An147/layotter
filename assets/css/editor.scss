@@ -1396,3 +1396,19 @@ span.description.layotter-description,
     text-shadow: 0 -1px 0 rgba(0,0,0,0.1) !important;
     cursor: default;
 }
+
+.layotter-row-options{
+    text-align: left;
+    padding: 2px 8px 4px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: gray;
+    background: #ebebeb;
+}
+.css-selector{
+  float: right;
+}
+.layout-type{
+    display: inline-block;
+    text-transform: capitalize;
+}
