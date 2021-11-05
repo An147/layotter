@@ -30,7 +30,7 @@
     </div>
 
     <div class="layotter-rows" ui-sortable="rowSortableOptions" ng-model="data.rows">
-        <div class="layotter-row layotter-animate" ng-repeat="row in data.rows" ng-class="{ 'layotter-loading' : row.isLoading }">
+        <div class="layotter-row layotter-animate" ng-repeat="row in data.rows" ng-class="{'layotter-loading' : row.isLoading }" ng-attr-id="{{ row.options.row_id.length > 0 && row.options.row_id || undefined }}">
             <div class="layotter-row-canvas">
                 <div class="layotter-row-options">
                     <div class="layout-type">{{row.options.content_width}}</div>

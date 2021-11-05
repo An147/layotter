@@ -18,7 +18,7 @@ app.controller('EditorCtrl', function($scope, $animate, data, content, templates
     angular.extend($scope, content, templates, layouts, history);
     $scope.data = data.contentStructure;
 
-
+    console.log('Layotter JSON Post Data');
     console.log($scope.data);
 
     
